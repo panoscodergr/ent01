@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: blue;
+            text-align: center;
+            margin: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border: 1px solid blue;
+            background-color: white;
+            color: blue;
+        }
+        input:focus, button:focus {
+            outline: none;
+            border-color: darkblue;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #007bff;
+            background-color: #f0f8ff;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>ent01</h1>
+    <input type="text" id="search" placeholder="Γράψε μια λέξη-κλειδί...">
+    <button onclick="searchWikipedia()">Αναζήτηση</button>
+    <div id="response"></div>
+    
+    <script>
+        async function searchWikipedia() {
+            const query = document.getElementById('search').value;
+            if (!query) {
+                document.getElementById('response').innerHTML = "Πληκτρολόγησε κάτι!";
+                return;
+            }
+            
+            const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (data.extract) {
+                    document.getElementById('response').innerHTML = `<h2>${data.title}</h2><p>${data.extract}</p>`;
+                } else {
+                    document.getElementById('response').innerHTML = "Δεν βρέθηκαν αποτελέσματα.";
+                }
+            } catch (error) {
+                document.getElementById('response').innerHTML = "Σφάλμα κατά την αναζήτηση.";
+            }
+        }
+    </script>
+</body>
+</html>
